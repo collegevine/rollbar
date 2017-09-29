@@ -7,7 +7,8 @@ import Data.Aeson (Value)
 
 data RollbarCfg = RollbarCfg {
     _rollbarCfgToken :: String,
-    _rollbarCfgEnvironment :: String
+    _rollbarCfgEnvironment :: String,
+    _rollbarCfgMute :: Bool
 }
 
 data Event = Event {
@@ -17,6 +18,12 @@ data Event = Event {
     _eventMessage :: String,
     _eventData :: Maybe Value
 } deriving Show
+
+class ToRollbarEvent e where
+    toRollbarEvent :: e -> Event
+
+instance ToRollbarEvent Event where
+    toRollbarEvent = id
 
 data EventLevel = Debug | Info | Warning | Error | Critical deriving Show
 
