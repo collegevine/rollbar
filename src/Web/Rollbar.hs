@@ -6,16 +6,39 @@ module Web.Rollbar
     ) where
 
 import Web.Rollbar.Types
+  ( Event
+  , HasRollbarCfg
+  , RollbarCfg
+  , ToRollbarEvent
+  , eventData
+  , eventLevel
+  , eventMessage
+  , eventTitle
+  , eventUUID
+  , rollbarCfgEnvironment
+  , rollbarCfgMute
+  , rollbarCfgToken
+  , toRollbarEvent
+  )
 
 import Control.Lens ((^.), view)
 import Control.Monad (unless)
 import Control.Monad.Except (MonadError)
 import Control.Monad.Reader (MonadReader)
 import Control.Monad.Trans (MonadIO)
-import Data.Aeson
+import Data.Aeson (Value, (.=), object)
 import Data.Char (toLower)
 import Data.Maybe (maybeToList)
+import Data.Text (Text)
 import Network.HTTP.Nano
+  ( AsHttpError
+  , HasHttpCfg
+  , HttpMethod(POST)
+  , addHeaders
+  , buildReq
+  , http'
+  , mkJSONData
+  )
 
 rollbar ::
        ( MonadIO m

@@ -2,7 +2,7 @@
 
 module Web.Rollbar.Types where
 
-import Control.Lens.TH
+import Control.Lens.TH (makeClassy, makeLenses)
 import Data.Aeson (Value)
 
 data RollbarCfg = RollbarCfg
