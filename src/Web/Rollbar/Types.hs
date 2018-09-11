@@ -4,10 +4,12 @@ module Web.Rollbar.Types where
 
 import Control.Lens.TH (makeClassy, makeLenses)
 import Data.Aeson (Value)
+import Data.Text (Text)
 
 data RollbarCfg = RollbarCfg
     { _rollbarCfgToken :: !String
     , _rollbarCfgEnvironment :: !String
+    , _rollbarCfgCodeVersion :: !(Maybe Text)
     , _rollbarCfgMute :: !Bool
     }
 
