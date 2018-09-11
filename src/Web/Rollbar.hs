@@ -58,6 +58,7 @@ rollbar evt = do
         http' . addHeaders [("Content-Type", "application/json")] =<<
             buildReq POST "https://api.rollbar.com/api/1/item/" (mkJSONData v)
 
+-- Documentation: https://docs.rollbar.com/reference
 encodeEvent :: (MonadReader r m, HasRollbarCfg r) => Event -> m Value
 encodeEvent evt = do
     tok <- view rollbarCfgToken
