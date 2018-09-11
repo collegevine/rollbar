@@ -6,22 +6,6 @@ module Web.Rollbar
     ) where
 
 import Web.Rollbar.Types
-    ( Event
-    , HasRollbarCfg
-    , RollbarCfg
-    , ToRollbarEvent
-    , eventData
-    , eventLevel
-    , eventMessage
-    , eventTitle
-    , eventUUID
-    , rollbarCfgEnvironment
-    , rollbarCfgMute
-    , rollbarCfgToken
-    , toRollbarEvent
-    , unAPIToken
-    , unEnvironment
-    )
 
 import Control.Lens ((^.), view)
 import Control.Monad (unless)
