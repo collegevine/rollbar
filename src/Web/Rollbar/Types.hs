@@ -20,6 +20,7 @@ data Event = Event
     , _eventTitle :: !String
     , _eventMessage :: !String
     , _eventData :: !(Maybe Value)
+    , _eventContext :: !(Maybe Text)
     } deriving (Show)
 
 class ToRollbarEvent e where
