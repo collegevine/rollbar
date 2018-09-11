@@ -7,8 +7,8 @@ import Data.Aeson (Value)
 import Data.Text (Text)
 
 data RollbarCfg = RollbarCfg
-    { _rollbarCfgToken :: !String
-    , _rollbarCfgEnvironment :: !String
+    { _rollbarCfgToken :: !Text
+    , _rollbarCfgEnvironment :: !Text
     , _rollbarCfgCodeVersion :: !(Maybe Text)
     , _rollbarCfgHost :: !(Maybe Text)
     , _rollbarCfgMute :: !Bool
@@ -16,9 +16,9 @@ data RollbarCfg = RollbarCfg
 
 data Event = Event
     { _eventLevel :: !EventLevel
-    , _eventUUID :: !(Maybe String)
-    , _eventTitle :: !String
-    , _eventMessage :: !String
+    , _eventUUID :: !(Maybe Text)
+    , _eventTitle :: !Text
+    , _eventMessage :: !Text
     , _eventData :: !(Maybe Value)
     , _eventContext :: !(Maybe Text)
     } deriving (Show)
