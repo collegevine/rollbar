@@ -4,3 +4,4 @@ packages:
 - location:
     git: https://github.com/ralphmorton/nano-http.git
     commit: bfccf7011964fcd8a12f7bcbf20ac5ef06eb4ede
+  extra-dep: true
