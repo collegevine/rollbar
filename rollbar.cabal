@@ -1,13 +1,13 @@
 name:                rollbar
-version:             0.1.0
+version:             0.2.0
 synopsis:            Rollbar client lib
 description:         Rollbar client lib
 homepage:            https://github.com/collegevine/rollbar#readme
 license:             BSD3
 license-file:        LICENSE
-author:              Ralph Morton
-maintainer:          ralph@collegevine.com
-copyright:           Collegevine
+author:              CollegeVine <ivy@collegevine.com>
+maintainer:          CollegeVine <ivy@collegevine.com>
+copyright:           CollegeVine 2016-2018
 category:            Web
 build-type:          Simple
 -- extra-source-files:
