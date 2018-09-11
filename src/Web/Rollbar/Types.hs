@@ -10,6 +10,7 @@ data RollbarCfg = RollbarCfg
     { _rollbarCfgToken :: !String
     , _rollbarCfgEnvironment :: !String
     , _rollbarCfgCodeVersion :: !(Maybe Text)
+    , _rollbarCfgHost :: !(Maybe Text)
     , _rollbarCfgMute :: !Bool
     }
 
