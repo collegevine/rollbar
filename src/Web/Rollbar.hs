@@ -8,7 +8,7 @@ module Web.Rollbar
 import Web.Rollbar.Types
 
 import Control.Lens ((^.), view)
-import Control.Monad (when)
+import Control.Monad (unless)
 import Control.Monad.Except (MonadError)
 import Control.Monad.Reader (MonadReader)
 import Control.Monad.Trans (MonadIO)
@@ -29,8 +29,8 @@ rollbar ::
   => evt
   -> m ()
 rollbar evt = do
-  mute <- view rollbarCfgMute
-  when (not mute) $ do
+  isMuted <- view rollbarCfgMute
+  unless isMuted $ do
     v <- encodeEvent $ toRollbarEvent evt
     http' . addHeaders [("Content-Type", "application/json")] =<<
       buildReq POST "https://api.rollbar.com/api/1/item/" (mkJSONData v)
