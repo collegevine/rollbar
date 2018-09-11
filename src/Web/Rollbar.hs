@@ -14,7 +14,8 @@ import Control.Monad.Reader (MonadReader)
 import Control.Monad.Trans (MonadIO)
 import Data.Aeson (Value, (.=), object)
 import Data.Char (toLower)
-import Data.Maybe (maybeToList)
+import Data.Maybe (catMaybes)
+import Data.Monoid ((<>))
 import Data.Text (Text)
 import Network.HTTP.Nano
     ( AsHttpError
@@ -61,5 +62,5 @@ encodeEvent evt = do
               ["message" .= object ["body" .= (evt ^. eventMessage), "data" .= (evt ^. eventData)]]
         , "notifier" .=
           object ["name" .= ("cv-rollbar-haskell" :: Text), "version" .= ("0.2.0" :: Text)]
-        ] ++
-        maybeToList (("uuid" .=) <$> evt ^. eventUUID)
+        ] <>
+        catMaybes [("uuid" .=) <$> evt ^. eventUUID, ("context" .=) <$> evt ^. eventContext]
