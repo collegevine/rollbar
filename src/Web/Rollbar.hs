@@ -19,6 +19,8 @@ import Web.Rollbar.Types
     , rollbarCfgMute
     , rollbarCfgToken
     , toRollbarEvent
+    , unAPIToken
+    , unEnvironment
     )
 
 import Control.Lens ((^.), view)
@@ -63,11 +65,11 @@ encodeEvent :: (MonadReader r m, HasRollbarCfg r) => Event -> m Value
 encodeEvent evt = do
     tok <- view rollbarCfgToken
     env <- view rollbarCfgEnvironment
-    return $ object ["access_token" .= tok, "data" .= toData env]
+    return $ object ["access_token" .= unAPIToken tok, "data" .= toData env]
   where
     toData env =
         object $
-        [ "environment" .= env
+        [ "environment" .= unEnvironment env
         , "level" .= (toLower <$> show (evt ^. eventLevel))
         , "title" .= (evt ^. eventTitle)
         , "body" .=

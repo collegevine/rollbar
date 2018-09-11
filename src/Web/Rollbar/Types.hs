@@ -6,11 +6,27 @@ import Control.Lens.TH (makeClassy, makeLenses)
 import Data.Aeson (Value)
 import Data.Text (Text)
 
+newtype APIToken = APIToken
+    { unAPIToken :: Text
+    }
+
+newtype Environment = Environment
+    { unEnvironment :: Text
+    }
+
+newtype CodeVersion = CodeVersion
+    { unCodeVersion :: Text
+    }
+
+newtype Host = Host
+    { unHost :: Text
+    }
+
 data RollbarCfg = RollbarCfg
-    { _rollbarCfgToken :: !Text
-    , _rollbarCfgEnvironment :: !Text
-    , _rollbarCfgCodeVersion :: !(Maybe Text)
-    , _rollbarCfgHost :: !(Maybe Text)
+    { _rollbarCfgToken :: !APIToken
+    , _rollbarCfgEnvironment :: !Environment
+    , _rollbarCfgHost :: !(Maybe Host)
+    , _rollbarCfgCodeVersion :: !(Maybe CodeVersion)
     , _rollbarCfgMute :: !Bool
     }
 
