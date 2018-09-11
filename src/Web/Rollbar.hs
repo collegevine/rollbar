@@ -73,5 +73,7 @@ encodeEvent evt = do
         , "body" .=
           object
               ["message" .= object ["body" .= (evt ^. eventMessage), "data" .= (evt ^. eventData)]]
+        , "notifier" .=
+          object ["name" .= ("cv-rollbar-haskell" :: Text), "version" .= ("0.2.0" :: Text)]
         ] ++
         maybeToList (("uuid" .=) <$> evt ^. eventUUID)
