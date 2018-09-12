@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 
@@ -5,11 +6,12 @@ module Encoding where
 
 import Control.Lens.TH (makeLenses)
 import Control.Monad.Reader (runReaderT)
-import Data.Aeson (ToJSON)
+import Data.Aeson (ToJSON(..), defaultOptions, genericToEncoding)
 import Data.Aeson.Encode.Pretty (Config(..), Indent(..), defConfig, encodePretty')
 import Data.ByteString.Lazy (ByteString)
 import Data.Text (Text)
 import qualified Data.Text.IO as TIO
+import GHC.Generics (Generic)
 import Test.Tasty (TestTree, testGroup)
 import Test.Tasty.Golden (goldenVsFile, goldenVsString, writeBinaryFile)
 import Web.Rollbar
@@ -36,15 +38,50 @@ instance HasRollbarCfg Context where
 ---
 ---
 ---
-sampleEvent :: Event
-sampleEvent =
+data SampleData = SampleData
+    { sampleFoo :: Bool
+    , sampleBar :: Integer
+    } deriving (Generic)
+
+instance ToJSON SampleData where
+    toEncoding = genericToEncoding defaultOptions
+
+minimalEvent :: Event
+minimalEvent =
     Event
-    { _eventLevel = Warning
+    { _eventLevel = Info
     , _eventUUID = Nothing
-    , _eventTitle = "Event Title"
-    , _eventMessage = "Event Message"
+    , _eventTitle = "title-testing"
+    , _eventMessage = "message-testing"
     , _eventData = Nothing
     , _eventContext = Nothing
+    }
+
+fullEvent :: Event
+fullEvent =
+    minimalEvent
+    { _eventLevel = Error
+    , _eventUUID = Just "deadbeef-dead-beef-dead-deadbeefdead"
+    , _eventData = Just (toJSON $ SampleData {sampleFoo = True, sampleBar = 42})
+    , _eventContext = Just "context-testing"
+    }
+
+minimalConfig :: RollbarCfg
+minimalConfig =
+    RollbarCfg
+    { _rollbarCfgToken = APIToken "token-testing"
+    , _rollbarCfgEnvironment = Environment "environment-testing"
+    , _rollbarCfgHost = Nothing
+    , _rollbarCfgCodeVersion = Nothing
+    , _rollbarCfgMute = False
+    }
+
+fullConfig :: RollbarCfg
+fullConfig =
+    minimalConfig
+    { _rollbarCfgHost = Just (Host "host-testing")
+    , _rollbarCfgCodeVersion = Just (CodeVersion "code-version-testing")
+    , _rollbarCfgMute = False
     }
 
 ---
@@ -54,19 +91,21 @@ test_encodeEvent :: TestTree
 test_encodeEvent =
     testGroup
         "Encoding"
-        [goldenVsString "full event" "test/golden/event-1.json" (encodeEvent' sampleEvent)]
+        [ goldenVsString
+              "minimal event"
+              "test/golden/event-minimal.json"
+              (test fullConfig minimalEvent)
+        , goldenVsString "full event" "test/golden/event-full.json" (test fullConfig fullEvent)
+        , goldenVsString
+              "minimal event with minimal config"
+              "test/golden/event-minimal-config-minimal.json"
+              (test minimalConfig minimalEvent)
+        ]
   where
-    encodeEvent' e = do
-        let ctx = Context {_ctxRollbarCfg = rollbarCfg}
-            rollbarCfg =
-                RollbarCfg
-                { _rollbarCfgToken = APIToken "token-testing"
-                , _rollbarCfgEnvironment = Environment "environment-testing"
-                , _rollbarCfgHost = Just (Host "host-testing")
-                , _rollbarCfgCodeVersion = Just (CodeVersion "code-version-testing")
-                , _rollbarCfgMute = False
-                }
-        runReaderT (encodeJSON <$> encodeEvent e) ctx
+    test :: RollbarCfg -> Event -> IO ByteString
+    test cfg evt = do
+        let ctx = Context {_ctxRollbarCfg = cfg}
+        runReaderT (encodeJSON <$> encodeEvent evt) ctx
 
 ---
 ---
