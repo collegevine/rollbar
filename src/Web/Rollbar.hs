@@ -50,9 +50,11 @@ encodeEvent :: (MonadReader r m, HasRollbarCfg r) => Event -> m Value
 encodeEvent evt = do
     tok <- view rollbarCfgToken
     env <- view rollbarCfgEnvironment
-    return $ object ["access_token" .= unAPIToken tok, "data" .= toData env]
+    host <- view rollbarCfgHost
+    return $ object ["access_token" .= unAPIToken tok, "data" .= toData env host]
   where
-    toData env =
+    toData :: Environment -> Maybe Host -> Value
+    toData env host =
         object $
         [ "environment" .= unEnvironment env
         , "level" .= (toLower <$> show (evt ^. eventLevel))
@@ -60,6 +62,7 @@ encodeEvent evt = do
         , "body" .=
           object
               ["message" .= object ["body" .= (evt ^. eventMessage), "data" .= (evt ^. eventData)]]
+        , "server" .= object (catMaybes [(\h -> "host" .= unHost h) <$> host])
         , "notifier" .=
           object ["name" .= ("cv-rollbar-haskell" :: Text), "version" .= ("0.2.0" :: Text)]
         ] <>
