@@ -2,15 +2,17 @@ all: format lint build
 
 build:
 	@stack build
+.PHONY: build
 
 format:
-	@find src -name '*.hs' -exec stack exec hindent -- {} \;
+	@find src test -name '*.hs' -exec stack exec hindent -- {} \;
+.PHONY: format
 
 lint:
 	@stack exec hlint src
+.PHONY: lint
 
 setup:
 	@stack build hindent
 	@stack build hlint
-
-.PHONY: format lint setup
+.PHONY: setup
