@@ -1,0 +1,19 @@
+{
+  "data": {
+    "notifier": {
+      "name": "cv-rollbar-haskell",
+      "version": "0.2.0"
+    },
+    "environment": "environment-testing",
+    "body": {
+      "message": {
+        "data": null,
+        "body": "message-testing"
+      }
+    },
+    "server": {},
+    "title": "title-testing",
+    "level": "info"
+  },
+  "access_token": "token-testing"
+}

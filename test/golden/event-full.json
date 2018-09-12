@@ -1,0 +1,26 @@
+{
+  "data": {
+    "notifier": {
+      "name": "cv-rollbar-haskell",
+      "version": "0.2.0"
+    },
+    "context": "context-testing",
+    "environment": "environment-testing",
+    "uuid": "a752d82b-b019-4ba6-9e34-3367635e1f7a",
+    "body": {
+      "message": {
+        "data": {
+          "sampleBar": 42,
+          "sampleFoo": true
+        },
+        "body": "message-testing"
+      }
+    },
+    "server": {
+      "host": "host-testing"
+    },
+    "title": "title-testing",
+    "level": "error"
+  },
+  "access_token": "token-testing"
+}

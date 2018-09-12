@@ -25,6 +25,10 @@ library
                      , mtl
                      , nano-http
                      , text
+  ghc-options:        -Wall -Werror
+                      -Wincomplete-record-updates
+                      -Wincomplete-uni-patterns
+                      -Wredundant-constraints
   default-language:    Haskell2010
 
 test-suite test
