@@ -16,6 +16,7 @@
         "body": "message-testing"
       }
     },
+    "code_version": "code-version-testing",
     "server": {
       "host": "host-testing"
     },
