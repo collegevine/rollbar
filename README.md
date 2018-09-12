@@ -14,6 +14,12 @@ make setup`
 make build
 ```
 
+## Test
+
+```bash
+make test
+```
+
 ## Lint
 
 ```bash

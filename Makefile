@@ -16,3 +16,7 @@ setup:
 	@stack build hindent
 	@stack build hlint
 .PHONY: setup
+
+test:
+	@stack test
+.PHONY: test

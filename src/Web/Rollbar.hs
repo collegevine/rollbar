@@ -3,6 +3,7 @@
 module Web.Rollbar
     ( module Web.Rollbar.Types
     , rollbar
+    , encodeEvent
     ) where
 
 import Web.Rollbar.Types
