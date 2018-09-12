@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Encoding where
+module Web.Rollbar.Test where
 
 import Control.Lens.TH (makeLenses)
 import Control.Monad.Reader (runReaderT)
@@ -94,7 +94,7 @@ test_encodeEvent =
         configs = [("minimal", minimalConfig), ("full", fullConfig)]
         tests :: [((String, String), (RollbarCfg, Event))]
         tests =
-            [ ( (en <> "event with " <> cn <> " config", "event-" <> en <> "-config-" <> cn)
+            [ ( (en <> " event with " <> cn <> " config", "event-" <> en <> "-config-" <> cn)
               , (cv, ev))
             | (en, ev) <- events
             , (cn, cv) <- configs
