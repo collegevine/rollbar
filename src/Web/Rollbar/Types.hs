@@ -6,32 +6,32 @@ import Control.Lens.TH
 import Data.Aeson (Value)
 
 data RollbarCfg = RollbarCfg
-  { _rollbarCfgToken :: String
-  , _rollbarCfgEnvironment :: String
-  , _rollbarCfgMute :: Bool
-  }
+    { _rollbarCfgToken :: String
+    , _rollbarCfgEnvironment :: String
+    , _rollbarCfgMute :: Bool
+    }
 
 data Event = Event
-  { _eventLevel :: EventLevel
-  , _eventUUID :: Maybe String
-  , _eventTitle :: String
-  , _eventMessage :: String
-  , _eventData :: Maybe Value
-  } deriving (Show)
+    { _eventLevel :: EventLevel
+    , _eventUUID :: Maybe String
+    , _eventTitle :: String
+    , _eventMessage :: String
+    , _eventData :: Maybe Value
+    } deriving (Show)
 
 class ToRollbarEvent e where
-  toRollbarEvent :: e -> Event
+    toRollbarEvent :: e -> Event
 
 instance ToRollbarEvent Event where
-  toRollbarEvent = id
+    toRollbarEvent = id
 
 data EventLevel
-  = Debug
-  | Info
-  | Warning
-  | Error
-  | Critical
-  deriving (Show)
+    = Debug
+    | Info
+    | Warning
+    | Error
+    | Critical
+    deriving (Show)
 
 makeClassy ''RollbarCfg
 
