@@ -9,6 +9,7 @@ import Control.Monad.Reader (runReaderT)
 import Data.Aeson (ToJSON(..), defaultOptions, genericToEncoding)
 import Data.Aeson.Encode.Pretty (Config(..), Indent(..), defConfig, encodePretty')
 import Data.ByteString.Lazy (ByteString)
+import Data.Monoid ((<>))
 import Data.Text (Text)
 import qualified Data.Text.IO as TIO
 import GHC.Generics (Generic)
@@ -89,18 +90,20 @@ fullConfig =
 ---
 test_encodeEvent :: TestTree
 test_encodeEvent =
-    testGroup
-        "Encoding"
-        [ goldenVsString
-              "minimal event"
-              "test/golden/event-minimal.json"
-              (test fullConfig minimalEvent)
-        , goldenVsString "full event" "test/golden/event-full.json" (test fullConfig fullEvent)
-        , goldenVsString
-              "minimal event with minimal config"
-              "test/golden/event-minimal-config-minimal.json"
-              (test minimalConfig minimalEvent)
-        ]
+    let events = [("minimal", minimalEvent), ("full", fullEvent)]
+        configs = [("minimal", minimalConfig), ("full", fullConfig)]
+        tests :: [((String, String), (RollbarCfg, Event))]
+        tests =
+            [ ( (en <> "event with " <> cn <> " config", "event-" <> en <> "-config-" <> cn)
+              , (cv, ev))
+            | (en, ev) <- events
+            , (cn, cv) <- configs
+            ]
+    in testGroup "Encoding" $
+       map
+           (\((name, filename), (config, event)) ->
+                (goldenVsString name ("test/golden/" <> filename <> ".json") (test config event)))
+           tests
   where
     test :: RollbarCfg -> Event -> IO ByteString
     test cfg evt = do
