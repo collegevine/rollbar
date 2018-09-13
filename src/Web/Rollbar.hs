@@ -1,8 +1,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Web.Rollbar
-    ( module Web.Rollbar.Types
-    , rollbar
+    ( -- * Reporting function
+      rollbar
+      -- * Types
+    , module Web.Rollbar.Types
     ) where
 
 import qualified Web.Rollbar.Internal as I
@@ -23,6 +25,7 @@ import Network.HTTP.Nano
     , mkJSONData
     )
 
+-- | Post @Event@ to Rollbar error reporting service
 rollbar ::
        ( MonadIO m
        , MonadError e m
@@ -32,7 +35,7 @@ rollbar ::
        , HasRollbarCfg r
        , ToRollbarEvent evt
        )
-    => evt
+    => evt -- ^ event to be posted
     -> m ()
 rollbar evt = do
     isMuted <- view rollbarCfgMute

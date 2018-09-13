@@ -1,7 +1,11 @@
 name:                rollbar
 version:             0.2.0
-synopsis:            Rollbar client lib
-description:         Rollbar client lib
+synopsis:            Error Tracking & Crash Reporting with Rollbar
+description:
+    A library for tracking errors and reporting crashes with Rollbar.
+    Rollbar provides real-time error alerting & debugging tools for developers.
+    .
+    To get started, see the documentation for the @Web.Rollbar@ module below.
 homepage:            https://github.com/collegevine/rollbar#readme
 license:             BSD3
 license-file:        LICENSE
