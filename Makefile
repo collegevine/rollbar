@@ -9,7 +9,7 @@ format:
 .PHONY: format
 
 lint:
-	@stack exec hlint src
+	@stack exec hlint src test
 .PHONY: lint
 
 setup:
