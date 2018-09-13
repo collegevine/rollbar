@@ -32,6 +32,12 @@ make lint
 make format
 ```
 
+## Documentation
+
+```bash
+make docs
+```
+
 [hindent]: https://github.com/commercialhaskell/hindent
 [hlint]: https://github.com/ndmitchell/hlint#readme
 [rollbar]: https://rollbar.com/

@@ -1,4 +1,4 @@
-all: format lint build test
+all: format lint docs build test
 
 build:
 	@stack build
@@ -20,3 +20,7 @@ setup:
 test:
 	@stack test
 .PHONY: test
+
+docs:
+	@stack haddock
+.PHONY: docs
