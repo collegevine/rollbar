@@ -53,23 +53,23 @@ encodeEvent evt = do
     env <- view rollbarCfgEnvironment
     mhost <- view rollbarCfgHost
     mcv <- view rollbarCfgCodeVersion
-    return $ object ["access_token" .= unAPIToken tok, "data" .= toData env mhost mcv]
+    return $ object ["access_token" .= tok, "data" .= toData env mhost mcv]
   where
     toData :: Environment -> Maybe Host -> Maybe CodeVersion -> Value
     toData env host cv =
         object $
-        [ "environment" .= unEnvironment env
+        [ "environment" .= env
         , "level" .= (toLower <$> show (evt ^. eventLevel))
         , "title" .= (evt ^. eventTitle)
         , "body" .=
           object
               ["message" .= object ["body" .= (evt ^. eventMessage), "data" .= (evt ^. eventData)]]
-        , "server" .= object (catMaybes [(\h -> "host" .= unHost h) <$> host])
+        , "server" .= object (catMaybes [("host" .=) <$> host])
         , "notifier" .=
           object ["name" .= ("cv-rollbar-haskell" :: Text), "version" .= ("0.2.0" :: Text)]
         ] <>
         catMaybes
             [ ("uuid" .=) <$> evt ^. eventUUID
             , ("context" .=) <$> evt ^. eventContext
-            , (\c -> "code_version" .= unCodeVersion c) <$> cv
+            , ("code_version" .=) <$> cv
             ]

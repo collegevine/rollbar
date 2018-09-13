@@ -1,26 +1,54 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Web.Rollbar.Types where
+module Web.Rollbar.Types
+    ( APIToken(APIToken)
+    , Environment(Environment)
+    , CodeVersion(CodeVersion)
+    , Host(Host)
+    , RollbarCfg(..)
+    , HasRollbarCfg(..)
+    , Event(..)
+    , EventLevel(..)
+    , ToRollbarEvent(..)
+    , eventContext
+    , eventData
+    , eventLevel
+    , eventMessage
+    , eventTitle
+    , eventUUID
+    ) where
 
 import Control.Lens.TH (makeClassy, makeLenses)
-import Data.Aeson (Value)
+import Data.Aeson (ToJSON(..), Value)
 import Data.Text (Text)
 
 newtype APIToken = APIToken
     { unAPIToken :: Text
     }
 
+instance ToJSON APIToken where
+    toJSON = toJSON . unAPIToken
+
 newtype Environment = Environment
     { unEnvironment :: Text
     }
+
+instance ToJSON Environment where
+    toJSON = toJSON . unEnvironment
 
 newtype CodeVersion = CodeVersion
     { unCodeVersion :: Text
     }
 
+instance ToJSON CodeVersion where
+    toJSON = toJSON . unCodeVersion
+
 newtype Host = Host
     { unHost :: Text
     }
+
+instance ToJSON Host where
+    toJSON = toJSON . unHost
 
 data RollbarCfg = RollbarCfg
     { _rollbarCfgToken :: !APIToken
