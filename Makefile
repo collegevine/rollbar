@@ -22,5 +22,5 @@ test:
 .PHONY: test
 
 docs:
-	@stack haddock
+	@stack haddock --no-haddock-deps
 .PHONY: docs
