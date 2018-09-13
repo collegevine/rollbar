@@ -24,22 +24,22 @@ jobs:
 
     - restore_cache:
         keys:
-        - cv-rollbar-cache-v1-dep-{{ .Branch }}-{{ checksum "rollbar.cabal" }}
+        - cv-rollbar-cache-v2-dep-{{ .Branch }}-{{ checksum "stack.yaml" }}-{{ checksum "rollbar.cabal" }}
         # This branch if available
-        - cv-rollbar-cache-v1-dep-{{ .Branch }}-
+        - cv-rollbar-cache-v2-dep-{{ .Branch }}-
         # Default branch if not
-        - cv-rollbar-cache-v1-dep-master-
+        - cv-rollbar-cache-v2-dep-master-
         # Any branch if there are none on the default branch -
         # this should be unnecessary if you have your default branch
         # configured correctly
-        - cv-rollbar-cache-v1-dep-
+        - cv-rollbar-cache-v2-dep-
     - run:
         name: Build binary
         command: stack build --install-ghc --pedantic --ghc-options="-O2"
 
     # Save dependency cache
     - save_cache:
-        key: cv-rollbar-cache-v1-dep-{{ .Branch }}-{{ checksum "rollbar.cabal" }}
+        key: cv-rollbar-cache-v2-dep-{{ .Branch }}-{{ checksum "stack.yaml" }}-{{ checksum "rollbar.cabal" }}
         paths:
         - ~/.stack
         - .stack-work
