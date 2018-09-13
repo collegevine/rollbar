@@ -1,4 +1,4 @@
-all: format lint docs build test
+all: lint docs build test
 
 build:
 	@stack build
