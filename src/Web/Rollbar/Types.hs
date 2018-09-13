@@ -128,7 +128,7 @@ data EventLevel
     | Warning
     | Error
     | Critical
-    deriving (Eq, Ord, Bounded)
+    deriving (Eq, Ord, Bounded, Show)
 
 instance ToJSON EventLevel where
     toJSON Debug = String "debug"
