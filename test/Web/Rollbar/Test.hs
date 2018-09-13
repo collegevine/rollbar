@@ -4,6 +4,18 @@
 
 module Web.Rollbar.Test where
 
+import Web.Rollbar
+    ( AccessToken(..)
+    , CodeVersion(..)
+    , Environment(..)
+    , Event(..)
+    , EventLevel(..)
+    , HasRollbarCfg(..)
+    , Host(..)
+    , RollbarCfg(..)
+    )
+import qualified Web.Rollbar.Internal as I
+
 import Control.Lens.TH (makeLenses)
 import Control.Monad.Reader (runReaderT)
 import Data.Aeson (ToJSON(..), defaultOptions, genericToEncoding)
@@ -15,17 +27,6 @@ import qualified Data.Text.IO as TIO
 import GHC.Generics (Generic)
 import Test.Tasty (TestTree, testGroup)
 import Test.Tasty.Golden (goldenVsFile, goldenVsString, writeBinaryFile)
-import Web.Rollbar
-    ( AccessToken(..)
-    , CodeVersion(..)
-    , Environment(..)
-    , Event(..)
-    , EventLevel(..)
-    , HasRollbarCfg(..)
-    , Host(..)
-    , RollbarCfg(..)
-    , encodeEvent
-    )
 
 data Context = Context
     { _ctxRollbarCfg :: RollbarCfg
@@ -108,7 +109,7 @@ test_encodeEvent =
     test :: RollbarCfg -> Event -> IO ByteString
     test cfg evt = do
         let ctx = Context {_ctxRollbarCfg = cfg}
-        runReaderT (encodeJSON <$> encodeEvent evt) ctx
+        runReaderT (encodeJSON <$> I.encodeEvent evt) ctx
 
 ---
 ---
