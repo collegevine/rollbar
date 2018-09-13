@@ -14,6 +14,12 @@ make setup`
 make build
 ```
 
+## Test
+
+```bash
+make test
+```
+
 ## Lint
 
 ```bash
@@ -24,6 +30,12 @@ make lint
 
 ```bash
 make format
+```
+
+## Documentation
+
+```bash
+make docs
 ```
 
 [hindent]: https://github.com/commercialhaskell/hindent

@@ -1,13 +1,17 @@
 name:                rollbar
-version:             0.1.0
-synopsis:            Rollbar client lib
-description:         Rollbar client lib
+version:             0.2.0
+synopsis:            Error Tracking & Crash Reporting with Rollbar
+description:
+    A library for tracking errors and reporting crashes with Rollbar.
+    Rollbar provides real-time error alerting & debugging tools for developers.
+    .
+    To get started, see the documentation for the @Web.Rollbar@ module below.
 homepage:            https://github.com/collegevine/rollbar#readme
 license:             BSD3
 license-file:        LICENSE
-author:              Ralph Morton
-maintainer:          ralph@collegevine.com
-copyright:           Collegevine
+author:              CollegeVine <ivy@collegevine.com>
+maintainer:          CollegeVine <ivy@collegevine.com>
+copyright:           CollegeVine 2016-2018
 category:            Web
 build-type:          Simple
 -- extra-source-files:
@@ -16,15 +20,38 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Web.Rollbar
+                     , Web.Rollbar.Internal
                      , Web.Rollbar.Types
 
   build-depends:       base
-                     , mtl
-                     , lens
-                     , text
-                     , containers
                      , aeson
+                     , containers
+                     , lens
+                     , mtl
                      , nano-http
+                     , text
+  ghc-options:        -Wall -Werror
+                      -Wincomplete-record-updates
+                      -Wincomplete-uni-patterns
+                      -Wredundant-constraints
+  default-language:    Haskell2010
+
+test-suite test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Driver.hs
+  build-depends:       base
+                     , aeson
+                     , aeson-pretty
+                     , bytestring
+                     , lens
+                     , mtl
+                     , rollbar
+                     , tasty
+                     , tasty-discover
+                     , tasty-golden
+                     , text
+  other-modules:       Web.Rollbar.Test
   default-language:    Haskell2010
 
 source-repository head

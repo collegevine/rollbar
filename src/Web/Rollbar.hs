@@ -1,22 +1,31 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Web.Rollbar
-    ( module Web.Rollbar.Types
-    , rollbar
+    ( -- * Reporting function
+      rollbar
+      -- * Types
+    , module Web.Rollbar.Types
     ) where
 
+import qualified Web.Rollbar.Internal as I
 import Web.Rollbar.Types
 
-import Control.Lens ((^.), view)
+import Control.Lens (view)
 import Control.Monad (unless)
 import Control.Monad.Except (MonadError)
 import Control.Monad.Reader (MonadReader)
 import Control.Monad.Trans (MonadIO)
-import Data.Aeson
-import Data.Char (toLower)
-import Data.Maybe (maybeToList)
 import Network.HTTP.Nano
+    ( AsHttpError
+    , HasHttpCfg
+    , HttpMethod(POST)
+    , addHeaders
+    , buildReq
+    , http'
+    , mkJSONData
+    )
 
+-- | Post @Event@ to Rollbar error reporting service
 rollbar ::
        ( MonadIO m
        , MonadError e m
@@ -26,28 +35,11 @@ rollbar ::
        , HasRollbarCfg r
        , ToRollbarEvent evt
        )
-    => evt
+    => evt -- ^ event to be posted
     -> m ()
 rollbar evt = do
     isMuted <- view rollbarCfgMute
     unless isMuted $ do
-        v <- encodeEvent $ toRollbarEvent evt
+        v <- I.encodeEvent $ toRollbarEvent evt
         http' . addHeaders [("Content-Type", "application/json")] =<<
             buildReq POST "https://api.rollbar.com/api/1/item/" (mkJSONData v)
-
-encodeEvent :: (MonadReader r m, HasRollbarCfg r) => Event -> m Value
-encodeEvent evt = do
-    tok <- view rollbarCfgToken
-    env <- view rollbarCfgEnvironment
-    return $ object ["access_token" .= tok, "data" .= toData env]
-  where
-    toData env =
-        object $
-        [ "environment" .= env
-        , "level" .= (toLower <$> show (evt ^. eventLevel))
-        , "title" .= (evt ^. eventTitle)
-        , "body" .=
-          object
-              ["message" .= object ["body" .= (evt ^. eventMessage), "data" .= (evt ^. eventData)]]
-        ] ++
-        maybeToList (("uuid" .=) <$> evt ^. eventUUID)

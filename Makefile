@@ -1,16 +1,26 @@
-all: format lint build
+all: lint docs build test
 
 build:
 	@stack build
+.PHONY: build
 
 format:
-	@find src -name '*.hs' -exec stack exec hindent -- {} \;
+	@find src test -name '*.hs' -exec stack exec hindent -- {} \;
+.PHONY: format
 
 lint:
-	@stack exec hlint src
+	@stack exec hlint src test
+.PHONY: lint
 
 setup:
 	@stack build hindent
 	@stack build hlint
+.PHONY: setup
 
-.PHONY: format lint setup
+test:
+	@stack test
+.PHONY: test
+
+docs:
+	@stack haddock --no-haddock-deps
+.PHONY: docs
