@@ -52,6 +52,11 @@ jobs:
         name: Copy coverage reports
         command: cp -r $(stack path --local-hpc-root) $CIRCLE_ARTIFACTS
 
+    # Documentation
+    - run:
+        name: Generate documentation
+        command: make docs && cp -r $(stack path --local-doc-root) $CIRCLE_ARTIFACTS
+
     # Save test results
     - store_test_results:
         path: /tmp/circleci-test-results
