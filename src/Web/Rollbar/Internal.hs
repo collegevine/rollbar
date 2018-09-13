@@ -9,11 +9,8 @@ import Data.Maybe (catMaybes)
 import Data.Monoid ((<>))
 import Data.Text (Text)
 import Web.Rollbar.Types
-    ( CodeVersion
-    , Environment
-    , Event
+    ( Event
     , HasRollbarCfg
-    , Host
     , eventContext
     , eventData
     , eventLevel
@@ -29,27 +26,29 @@ import Web.Rollbar.Types
 -- | Encode an @Event@ Documentation: https://docs.rollbar.com/reference
 encodeEvent :: (MonadReader r m, HasRollbarCfg r) => Event -> m Value
 encodeEvent evt = do
-    tok <- view rollbarCfgToken
+    token <- view rollbarCfgToken
     env <- view rollbarCfgEnvironment
-    mhost <- view rollbarCfgHost
-    mcv <- view rollbarCfgCodeVersion
-    return $ object ["access_token" .= tok, "data" .= toData env mhost mcv]
-  where
-    toData :: Environment -> Maybe Host -> Maybe CodeVersion -> Value
-    toData env host cv =
-        object $
-        [ "environment" .= env
-        , "level" .= (evt ^. eventLevel)
-        , "title" .= (evt ^. eventTitle)
-        , "body" .=
+    host <- view rollbarCfgHost
+    codeVersion <- view rollbarCfgCodeVersion
+    return . object $
+        [ "access_token" .= token
+        , "data" .=
           object
-              ["message" .= object ["body" .= (evt ^. eventMessage), "data" .= (evt ^. eventData)]]
-        , "server" .= object (catMaybes [("host" .=) <$> host])
-        , "notifier" .=
-          object ["name" .= ("cv-rollbar-haskell" :: Text), "version" .= ("0.2.0" :: Text)]
-        ] <>
-        catMaybes
-            [ ("uuid" .=) <$> evt ^. eventUUID
-            , ("context" .=) <$> evt ^. eventContext
-            , ("code_version" .=) <$> cv
-            ]
+              ([ "environment" .= env
+               , "level" .= (evt ^. eventLevel)
+               , "title" .= (evt ^. eventTitle)
+               , "body" .=
+                 object
+                     [ "message" .=
+                       object ["body" .= (evt ^. eventMessage), "data" .= (evt ^. eventData)]
+                     ]
+               , "server" .= object (catMaybes [("host" .=) <$> host])
+               , "notifier" .=
+                 object ["name" .= ("cv-rollbar-haskell" :: Text), "version" .= ("0.2.0" :: Text)]
+               ] <>
+               catMaybes
+                   [ ("uuid" .=) <$> evt ^. eventUUID
+                   , ("context" .=) <$> evt ^. eventContext
+                   , ("code_version" .=) <$> codeVersion
+                   ])
+        ]
