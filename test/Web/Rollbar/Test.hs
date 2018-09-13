@@ -91,20 +91,13 @@ fullConfig =
 ---
 test_encodeEvent :: TestTree
 test_encodeEvent =
-    let events = [("minimal", minimalEvent), ("full", fullEvent)]
-        configs = [("minimal", minimalConfig), ("full", fullConfig)]
-        tests :: [((String, String), (RollbarCfg, Event))]
-        tests =
-            [ ( (en <> " event with " <> cn <> " config", "event-" <> en <> "-config-" <> cn)
-              , (cv, ev))
-            | (en, ev) <- events
-            , (cn, cv) <- configs
-            ]
-    in testGroup "Encoding" $
-       map
-           (\((name, filename), (config, event)) ->
-                (goldenVsString name ("test/golden/" <> filename <> ".json") (test config event)))
-           tests
+    testGroup "Encoding"
+    [ goldenVsString name fileName $ test cv ev
+    | (en, ev) <- [("minimal", minimalEvent), ("full", fullEvent)]
+    , (cn, cv) <- [("minimal", minimalConfig), ("full", fullConfig)]
+    , let name = en <> " event with " <> cn <> " config"
+    , let fileName = "test/golden/" <> "event-" <> en <> "-config-" <> cn <> ".json"
+    ]
   where
     test :: RollbarCfg -> Event -> IO ByteString
     test cfg evt = do
