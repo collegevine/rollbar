@@ -2,7 +2,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 module Web.Rollbar.Types
-    ( APIToken(APIToken)
+    ( AccessToken(AccessToken)
     , Environment(Environment)
     , CodeVersion(CodeVersion)
     , Host(Host)
@@ -24,12 +24,12 @@ import Data.Aeson (ToJSON(..), Value(String))
 import Data.Ord (Ord)
 import Data.Text (Text)
 
-newtype APIToken = APIToken
-    { unAPIToken :: Text
+newtype AccessToken = AccessToken
+    { unAccessToken :: Text
     }
 
-instance ToJSON APIToken where
-    toJSON = toJSON . unAPIToken
+instance ToJSON AccessToken where
+    toJSON = toJSON . unAccessToken
 
 newtype Environment = Environment
     { unEnvironment :: Text
@@ -53,7 +53,7 @@ instance ToJSON Host where
     toJSON = toJSON . unHost
 
 data RollbarCfg = RollbarCfg
-    { _rollbarCfgToken :: !APIToken
+    { _rollbarCfgToken :: !AccessToken
     , _rollbarCfgEnvironment :: !Environment
     , _rollbarCfgHost :: !(Maybe Host)
     , _rollbarCfgCodeVersion :: !(Maybe CodeVersion)

@@ -16,7 +16,7 @@ import GHC.Generics (Generic)
 import Test.Tasty (TestTree, testGroup)
 import Test.Tasty.Golden (goldenVsFile, goldenVsString, writeBinaryFile)
 import Web.Rollbar
-    ( APIToken(..)
+    ( AccessToken(..)
     , CodeVersion(..)
     , Environment(..)
     , Event(..)
@@ -70,7 +70,7 @@ fullEvent =
 minimalConfig :: RollbarCfg
 minimalConfig =
     RollbarCfg
-    { _rollbarCfgToken = APIToken "token-testing"
+    { _rollbarCfgToken = AccessToken "token-testing"
     , _rollbarCfgEnvironment = Environment "environment-testing"
     , _rollbarCfgHost = Nothing
     , _rollbarCfgCodeVersion = Nothing
