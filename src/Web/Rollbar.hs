@@ -14,7 +14,6 @@ import Control.Monad.Except (MonadError)
 import Control.Monad.Reader (MonadReader)
 import Control.Monad.Trans (MonadIO)
 import Data.Aeson (Value, (.=), object)
-import Data.Char (toLower)
 import Data.Maybe (catMaybes)
 import Data.Monoid ((<>))
 import Data.Text (Text)
@@ -59,7 +58,7 @@ encodeEvent evt = do
     toData env host cv =
         object $
         [ "environment" .= env
-        , "level" .= (toLower <$> show (evt ^. eventLevel))
+        , "level" .= (evt ^. eventLevel)
         , "title" .= (evt ^. eventTitle)
         , "body" .=
           object

@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 
 module Web.Rollbar.Types
@@ -19,7 +20,8 @@ module Web.Rollbar.Types
     ) where
 
 import Control.Lens.TH (makeClassy, makeLenses)
-import Data.Aeson (ToJSON(..), Value)
+import Data.Aeson (ToJSON(..), Value(String))
+import Data.Ord (Ord)
 import Data.Text (Text)
 
 newtype APIToken = APIToken
@@ -65,7 +67,7 @@ data Event = Event
     , _eventMessage :: !Text
     , _eventData :: !(Maybe Value)
     , _eventContext :: !(Maybe Text)
-    } deriving (Show)
+    }
 
 class ToRollbarEvent e where
     toRollbarEvent :: e -> Event
@@ -79,7 +81,14 @@ data EventLevel
     | Warning
     | Error
     | Critical
-    deriving (Show)
+    deriving (Eq, Ord)
+
+instance ToJSON EventLevel where
+    toJSON Debug = String "debug"
+    toJSON Info = String "info"
+    toJSON Warning = String "warning"
+    toJSON Error = String "error"
+    toJSON Critical = String "critical"
 
 makeClassy ''RollbarCfg
 
