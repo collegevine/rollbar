@@ -28,7 +28,7 @@ import GHC.Generics (Generic)
 import Test.Tasty (TestTree, testGroup)
 import Test.Tasty.Golden (goldenVsFile, goldenVsString, writeBinaryFile)
 
-data Context = Context
+newtype Context = Context
     { _ctxRollbarCfg :: RollbarCfg
     }
 
@@ -64,7 +64,7 @@ fullEvent =
     minimalEvent
     { _eventLevel = Error
     , _eventUUID = Just "deadbeef-dead-beef-dead-deadbeefdead"
-    , _eventData = Just (toJSON $ SampleData {sampleFoo = True, sampleBar = 42})
+    , _eventData = Just (toJSON SampleData {sampleFoo = True, sampleBar = 42})
     , _eventContext = Just "context-testing"
     }
 
@@ -115,4 +115,4 @@ test_encodeEvent =
 ---
 ---
 encodeJSON :: ToJSON a => a -> ByteString
-encodeJSON = encodePretty' (defConfig {confIndent = (Spaces 2), confTrailingNewline = True})
+encodeJSON = encodePretty' (defConfig {confIndent = Spaces 2, confTrailingNewline = True})
