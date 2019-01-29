@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module Web.Rollbar.Internal where
 
 import Control.Lens ((^.), view)

@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module Web.Rollbar
     ( -- * Reporting function
       rollbar

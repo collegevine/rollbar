@@ -18,11 +18,13 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 library
+  default-extensions:  NamedFieldPuns, TupleSections, FlexibleContexts, ConstraintKinds, TypeSynonymInstances, FlexibleInstances,
+                       ViewPatterns, UndecidableInstances, MultiParamTypeClasses, OverloadedStrings, TemplateHaskell, LambdaCase
   hs-source-dirs:      src
   exposed-modules:     Web.Rollbar
                      , Web.Rollbar.Internal
                      , Web.Rollbar.Types
-
+                     , Web.Rollbar.Class
   build-depends:       base
                      , aeson
                      , containers
